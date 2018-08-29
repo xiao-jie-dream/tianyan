@@ -1,0 +1,43 @@
+spring:
+  cloud:
+    gateway:
+      locator:
+        enabled: true
+      routes:
+      - id: tianyan-auth
+        uri: lb://tianyan-auth
+        predicates:
+        - Path=/auth/**
+        filters:
+          # 验证码处理
+        - ImageCodeGatewayFilter
+          # 前端密码解密
+        - PasswordDecoderFilter
+        - StripPrefix=1
+      - id: tianyan-upms
+        uri: lb://tianyan-upms
+        predicates:
+        - Path=/admin/**
+        filters:
+          # 限流配置
+        - name: RequestRateLimiter
+          args:
+            key-resolver: '#{@remoteAddrKeyResolver}'
+            redis-rate-limiter.replenishRate: 10
+            redis-rate-limiter.burstCapacity: 20
+        - StripPrefix=1
+          # 降级配置
+        - name: Hystrix
+          args:
+            name: default
+            fallbackUri: 'forward:/fallback'
+      - id: tianyan-demo
+        uri: lb://tianyan-demo
+        predicates:
+        - Path=/student/**
+        filters:
+        - StripPrefix=1
+security:
+  encode:
+    # 前端密码密钥，必须16位
+    key: 'colourfultianyan'

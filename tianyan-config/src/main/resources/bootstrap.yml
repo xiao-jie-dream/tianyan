@@ -1,0 +1,29 @@
+server:
+  port: 4001
+
+spring:
+  application:
+    name: tianyan-config
+  profiles:
+    active: native
+  # 配置中心
+  cloud:
+    consul:
+      host: 127.0.0.1
+      port: 8500
+      discovery:
+        prefer-ip-address: true
+    config:
+      server:
+        native:
+          search-locations: classpath:/config/
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+logging:
+  level:
+    root: info

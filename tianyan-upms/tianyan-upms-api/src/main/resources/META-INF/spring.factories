@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.colourfulchina.tianyan.admin.api.feign.fallback.RemoteUserServiceFallbackImpl,\
+  com.colourfulchina.tianyan.admin.api.feign.fallback.RemoteLogServiceFallbackImpl\
